@@ -14,7 +14,8 @@ LINK=$(STATIC_LINK) $(LIBTOOL_LINK)
 
 if ENABLE_NTFSPROGS
 
-bin_PROGRAMS		= ntfsfix ntfsinfo ntfscluster ntfsls ntfscat ntfscmp
+bin_PROGRAMS		= ntfsfix ntfsinfo ntfscluster ntfsls ntfscat ntfscmp \
+			  ntfsvolume
 sbin_PROGRAMS		= mkntfs ntfslabel ntfsundelete ntfsresize ntfsclone \
 			  ntfscp
 EXTRA_PROGRAM_NAMES	= ntfswipe ntfstruncate ntfsrecover \
@@ -103,6 +104,10 @@ ntfsck_LDFLAGS		= $(AM_LFLAGS)
 ntfscmp_SOURCES		= ntfscmp.c utils.c utils.h
 ntfscmp_LDADD		= $(AM_LIBS)
 ntfscmp_LDFLAGS		= $(AM_LFLAGS)
+
+ntfsvolume_SOURCES	= ntfsvolume.c ntfsvolume.h utils.c utils.h
+ntfsvolume_LDADD	= $(AM_LIBS)
+ntfsvolume_LDFLAGS	= $(AM_LFLAGS)
 
 ntfsrecover_SOURCES	= playlog.c ntfsrecover.c utils.c utils.h ntfsrecover.h
 ntfsrecover_LDADD	= $(AM_LIBS) $(NTFSRECOVER_LIBS)
