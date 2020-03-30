@@ -552,6 +552,7 @@ static int list_dir_entry(ntfsls_dirent * dirent, const ntfschar * name,
 		ATTR_RECORD *attr;
 		struct timespec change_time;
 		char t_buf[26];
+		char filetype = '?';
 
 		result = -1;				// Everything else is bad
 
@@ -578,6 +579,28 @@ static int list_dir_entry(ntfsls_dirent * dirent, const ntfschar * name,
 		memmove(t_buf+16, t_buf+19, 5);
 		t_buf[21] = '\0';
 
+		if (dt_type == NTFS_DT_FIFO) {
+			filetype = 'p';
+		}
+		if (dt_type == NTFS_DT_CHR) {
+			filetype = 'c';
+		}
+		if (dt_type == NTFS_DT_DIR) {
+			filetype = 'd';
+		}
+		if (dt_type == NTFS_DT_BLK) {
+			filetype = 'b';
+		}
+		else if (dt_type == NTFS_DT_REG) {
+			filetype = '-';
+		}
+		else if (dt_type == NTFS_DT_LNK) {
+			filetype = 'l';
+		}
+		else if (dt_type == NTFS_DT_SOCK) {
+			filetype = 's';
+		}
+
 		if (dt_type != NTFS_DT_DIR) {
 			if (!ntfs_attr_lookup(AT_DATA, AT_UNNAMED, 0, 0, 0,
 					NULL, 0, ctx))
@@ -586,12 +609,15 @@ static int list_dir_entry(ntfsls_dirent * dirent, const ntfschar * name,
 		}
 
 		if (opts.inode)
-			printf("%7llu    %8lld %s %s\n",
+			printf("%c %7llu    %8lld %s %s\n",
+                    (int)filetype,
 					(unsigned long long)MREF(mref),
 					(long long)filesize, t_buf + 4,
 					filename);
 		else
-			printf("%8lld %s %s\n", (long long)filesize, t_buf + 4,
+			printf("%c %8lld %s %s\n",
+                    (int)filetype,
+                    (long long)filesize, t_buf + 4,
 					filename);
 
 		if (dir) {
